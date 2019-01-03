@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>4使用underscore.js</title>
+	<!--weui.css仅为快速的做出页面，可删除-->
+	<link rel="stylesheet" href="static/weui.css"/>
+	<script src="static/zepto.min.js"></script>
+	
+	<!--引入underscore.js-->
+	<script src="underscore/underscore-min.js"></script>
+</head>
+
+<body>
+    
+	<div class="weui_panel weui_panel_access">
+        <div class="weui_panel_hd">文章列表</div>
+        <div class="weui_panel_bd js-blog-list">
+           
+        </div>
+    </div>
+	
+	<!--模板-->
+	<textarea class="js-tmp" style="display:none;">
+		<div class="weui_media_box weui_media_text">
+			<a href="<%= url %>" class="" target="_blank">
+				<h4 class="weui_media_title"><%= title %></h4>
+			</a>
+			<p class="weui_media_desc"><%= desc %></p>
+		</div>
+	</textarea>
+	<!--/模板-->
+	
+	<script type="text/javascript">
+		/*
+			Underscore.js(1.8.3) 中文文档 http://www.css88.com/doc/underscore/
+			
+			template_.template(templateString, [settings]) 
+			将 JavaScript 模板编译为可以用于页面呈现的函数, 对于通过JSON数据源生成复杂的HTML并呈现出来的操作非常有用。 模板函数可以使用 <%= … %>插入变量, 也可以用<% … %>执行任意的 JavaScript 代码。 如果您希望插入一个值, 并让其进行HTML转义,请使用<%- … %>。 当你要给模板函数赋值的时候，可以传递一个含有与模板对应属性的data对象 。 如果您要写一个一次性的, 您可以传对象 data 作为第二个参数给模板 template 来直接呈现, 这样页面会立即呈现而不是返回一个模板函数。
+		*/
+
+		$(function(){
+			$.ajax({
+				url: 'static/blog.json',
+				type: 'get',
+		        dataType: 'json',
+		        success: function (response) {
+					var htmlList = '';
+					var data = response.list;
+
+					var htmlTemp = $("textarea.js-tmp").val();
+						
+					$.each(data, function(i,el) {
+						//htmlList += htmlTemp.temp(el);
+						//htmlList += laytpl(htmlTemp).render(el);
+						
+						/*可以这样：*/
+						//var compiled = _.template(htmlTemp);
+						//htmlList += compiled(el);
+						
+						/*或者*/
+						htmlList += _.template(htmlTemp)(el);
+					});
+
+					$('.js-blog-list').empty().append(htmlList);
+		        },
+				error: function (jqXHR, textStatus, errorThrown) {
+					if (textStatus == 'timeout') {
+						alert('请求超时');
+						return false;
+					}
+					console.log(jqXHR.responseText);
+				},
+			});
+		});
+	</script>
+	<script src="static/tj.js"></script>
+</body>

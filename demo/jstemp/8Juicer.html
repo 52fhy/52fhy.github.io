@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>8使用juicer</title>
+	<!--weui.css仅为快速的做出页面，可删除-->
+	<link rel="stylesheet" href="static/weui.css"/>
+	<script src="static/zepto.min.js"></script>
+	
+	<!--引入juicer-->
+	<script src="juicer/juicer-min.js"></script>
+</head>
+
+<body>
+    
+	<div class="weui_panel weui_panel_access">
+        <div class="weui_panel_hd">文章列表</div>
+        <div class="weui_panel_bd js-blog-list">
+           
+        </div>
+    </div>
+	
+	<!--模板-->
+	<textarea class="js-tmp" style="display:none;">
+		<div class="weui_media_box weui_media_text">
+			<a href="${url}" class="" target="_blank">
+				<h4 class="weui_media_title">${title}</h4>
+			</a>
+			<p class="weui_media_desc">${desc}</p>
+		</div>
+	</textarea>
+	<!--/模板-->
+	
+	<script type="text/javascript">
+		/*
+			Juicer – 一个Javascript模板引擎的实现和优化 http://juicer.name/
+			PaulGuo/Juicer: A Light Javascript Templete Engine. https://github.com/PaulGuo/Juicer
+			
+			当前最新版本: 0.6.14
+
+			Juicer 是一个高效、轻量的前端 (Javascript) 模板引擎，使用 Juicer 可以是你的代码实现数据和视图模型的分离(MVC)。除此之外，它还可以在 Node.js 环境中运行。
+		*/
+
+		$(function(){
+			$.ajax({
+				url: 'static/blog.json',
+				type: 'get',
+		        dataType: 'json',
+		        success: function (response) {
+					var htmlList = '';
+					var data = response.list;
+
+					var htmlTemp = $("textarea.js-tmp").val();
+					
+					$.each(data, function(i,el) {
+						htmlList += juicer(htmlTemp,el);
+					});
+
+					$('.js-blog-list').empty().append(htmlList);
+		        },
+				error: function (jqXHR, textStatus, errorThrown) {
+					if (textStatus == 'timeout') {
+						alert('请求超时');
+						return false;
+					}
+					console.log(jqXHR.responseText);
+				},
+			});
+		});
+	</script>
+	<script src="static/tj.js"></script>
+</body>

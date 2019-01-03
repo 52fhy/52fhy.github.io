@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>为什么使用jsonp?</title>
+    <script type="text/javascript">
+        // 跨域发送HTTP请求，从服务端获取字符串数据
+		var xmlhttp = '';
+		//var url = 'http://demo.52fhy.com/jsonp/getJson.php';
+		var url = 'http://apis.juhe.cn/mobile/get?phone=13429667914&key=';
+        function getHello() {
+			xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = handler;
+			xmlhttp.open("GET",url,true);
+			xmlhttp.send(null);
+        }
+        // 处理函数
+        function handler(data) {
+			if (xmlhttp.readyState==4){// 4 = "loaded"
+				if (xmlhttp.status==200){// 200 = OK
+					console.log(data);
+					// our code here...
+				}else{
+					console.log(data);
+					
+					document.getElementById("why").innerHTML = "XMLHttpRequest cannot load " +url+ ". No 'Access-Control-Allow-Origin' header is present on the requested resource. Origin 'http://localhost' is therefore not allowed access. The response had HTTP status code 403." +
+					
+					"<h2>受浏览器同源策略，无法访问该资源。</h2>"
+					;
+				}
+			}  
+        }
+    </script>
+ 
+</head>
+<body>
+    <input type="button" value="发送跨域HTTP请求，获取数据" onclick="getHello()" />
+	<div id="why"></div>
+</body>
+<script src="static/tj.js"></script>
+</html>

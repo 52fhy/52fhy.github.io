@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>5使用artTemplate</title>
+	<!--weui.css仅为快速的做出页面，可删除-->
+	<link rel="stylesheet" href="static/weui.css"/>
+	<script src="static/zepto.min.js"></script>
+	
+	<!--artTemplate.js-->
+	<script src="artTemplate/template-native.js"></script>
+</head>
+
+<body>
+    
+	<div class="weui_panel weui_panel_access">
+        <div class="weui_panel_hd">文章列表</div>
+        <div class="weui_panel_bd js-blog-list">
+           
+        </div>
+    </div>
+	
+	<!--模板: 注意这里模板与前面的示例不一样了，直接使用一个type="text/html"的script标签存放模板-->
+	<script id="js-tmp" type="text/html">
+		<div class="weui_media_box weui_media_text">
+			<a href="<%= url %>" class="" target="_blank">
+				<h4 class="weui_media_title"><%= title %></h4>
+			</a>
+			<p class="weui_media_desc"><%= desc %></p>
+		</div>
+	</script>
+	<!--/模板-->
+	
+	<script type="text/javascript">
+		/*
+			artTemplate-3.0 新一代 javascript 模板引擎
+			https://github.com/aui/artTemplate
+			
+			template-native.js (原生语法版, 2.3kb)
+			
+			支持if等语句<% if(admin) %>   <%}%>
+			
+			template(id, data)
+			根据 id 渲染模板。内部会根据document.getElementById(id)查找模板。
+			如果没有 data 参数，那么将返回一渲染函数。
+			
+		*/
+
+		$(function(){
+			$.ajax({
+				url: 'static/blog.json',
+				type: 'get',
+		        dataType: 'json',
+		        success: function (response) {
+					var htmlList = '';
+					var data = response.list;
+
+					//本例不再需要手动取模板内容
+					//var htmlTemp = $("textarea.js-tmp").val();
+						
+					$.each(data, function(i,el) {
+						//htmlList += htmlTemp.temp(el);
+						//htmlList += laytpl(htmlTemp).render(el);
+						//htmlList += _.template(htmlTemp)(el);
+						
+						htmlList += template("js-tmp", el); //注意第一个参数是id
+					});
+
+					$('.js-blog-list').empty().append(htmlList);
+		        },
+				error: function (jqXHR, textStatus, errorThrown) {
+					if (textStatus == 'timeout') {
+						alert('请求超时');
+						return false;
+					}
+					console.log(jqXHR.responseText);
+				},
+			});
+		});
+	</script>
+	<script src="static/tj.js"></script>
+</body>

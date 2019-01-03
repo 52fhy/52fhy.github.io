@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>3使用laytpl</title>
+	<!--weui.css仅为快速的做出页面，可删除-->
+	<link rel="stylesheet" href="static/weui.css"/>
+	<script src="static/zepto.min.js"></script>
+	
+	<!--引入laytpl-->
+	<script src="laytpl/laytpl.js"></script>
+</head>
+
+<body>
+    
+	<div class="weui_panel weui_panel_access">
+        <div class="weui_panel_hd">文章列表</div>
+        <div class="weui_panel_bd js-blog-list">
+           
+        </div>
+    </div>
+	
+	<!--模板-->
+	<textarea class="js-tmp" style="display:none;">
+		<div class="weui_media_box weui_media_text">
+			<a href="{{d.url}}" class="" target="_blank">
+				<h4 class="weui_media_title">{{d.title}}</h4>
+			</a>
+			<p class="weui_media_desc">{{d.desc}}</p>
+		</div>
+	</textarea>
+	<!--/模板-->
+	
+	<script type="text/javascript">
+		/*
+			laytpl官网 - 精妙的JavaScript模板引擎  http://laytpl.layui.com/
+			
+			支持if等语句{{# if(){ //some code ... }}   {{# } }}
+			
+			模版语法:
+			输出一个普通字段，不转义html：   {{ d.field }}
+			输出一个普通字段，并转义html：   {{= d.field }}
+			JavaScript脚本： {{# JavaScript statement }}
+		*/
+
+		$(function(){
+			$.ajax({
+				url: 'static/blog.json',
+				type: 'get',
+		        dataType: 'json',
+		        success: function (response) {
+					var htmlList = '';
+					var data = response.list;
+
+					var htmlTemp = $("textarea.js-tmp").val();
+					
+					$.each(data, function(i,el) {
+						//htmlList += htmlTemp.temp(el);
+						htmlList += laytpl(htmlTemp).render(el);
+					});
+
+					$('.js-blog-list').empty().append(htmlList);
+		        },
+				error: function (jqXHR, textStatus, errorThrown) {
+					if (textStatus == 'timeout') {
+						alert('请求超时');
+						return false;
+					}
+					console.log(jqXHR.responseText);
+				},
+			});
+		});
+	</script>
+	<script src="static/tj.js"></script>
+</body>

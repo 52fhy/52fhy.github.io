@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<link rel="stylesheet" href="static/weui.css"/>
+    <title>jQuery jsonp demo</title>
+    <script src="static/zepto.min.js"></script>
+    <script type="text/javascript">
+		$.ajax({
+			type: "get",
+			async: false,
+			url: "http://demo.52fhy.com/jsonp/handJsonp.php",
+			dataType: "jsonp",
+			success: function (data, textStatus, jqXHR) {
+				console.log(data);
+				//console.log(jsonp1);
+			},
+			error: function (XMLHttpRequest, textStatus, errorThrown) {
+				alert('fail');
+				console.log(XMLHttpRequest, textStatus, errorThrown);
+			}
+		});
+		
+		
+/*
+需要将dataType设置成"jsonp"就可以进行跨域请求了，一切就像发送非跨域请求那样简单。
+jQuery为我们封装好了回调函数，一般情况下不需要我们单独去写，如果你不想在success中处理，想单独写处理函数，那么可以通过设置这2个参数来实现：
+	jsonp: "callback",//传递给服务端的回调函数名称参数,如果不设置此项，则默认是"callback"
+	jsonpCallback: "handler",//传递给服务端的回调函数名称，如果不设置此项，则默认是形如"jQuery111007837897759742043_1460657212499"的由jQuery自动生成的函数名称
+*/
+    </script>
+</head>
+<body>
+    
+	<div class="hd">
+		<h1 class="page_title">使用jQuery一切将会变得非常简单</h1>
+		<p class="page_desc">请打开console控制台调试代码</p>
+	</div>
+	<div>
+	js代码：
+	<pre style="margin:20px 0;font:100 12px/18px monaco, andale mono, courier new;padding:10px 12px;border:#ddd 1px solid;border-left-width:4px;background-color:#fefefe;box-shadow:0 0 4px #eee;word-break:break-all;word-wrap:break-word;color:#444"><span style="color:#000">$</span>.<span style="color:#000">ajax</span>({<br>	<span style="color:#000">type</span>: <span style="color:#a11">"get"</span>,<br>	<span style="color:#000">async</span>: <span style="color:#219">false</span>,<br>	<span style="color:#000">url</span>: <span style="color:#a11">"http://demo.52fhy.com/jsonp/handJsonp.php"</span>,<br>	<span style="color:#000">dataType</span>: <span style="color:#a11">"jsonp"</span>,<br>	<span style="color:#000">success</span>: <span style="color:#708">function</span> (<span style="color:#00f">data</span>, <span style="color:#00f">textStatus</span>, <span style="color:#00f">jqXHR</span>) {<br>		<span style="color:#000">console</span>.<span style="color:#000">log</span>(<span style="color:#000-2">data</span>);<br>	},<br>	<span style="color:#000">error</span>: <span style="color:#708">function</span> (<span style="color:#00f">XMLHttpRequest</span>, <span style="color:#00f">textStatus</span>, <span style="color:#00f">errorThrown</span>) {<br>		<span style="color:#000">alert</span>(<span style="color:#a11">'fail'</span>);<br>		<span style="color:#000">console</span>.<span style="color:#000">log</span>(<span style="color:#000-2">XMLHttpRequest</span>, <span style="color:#000-2">textStatus</span>, <span style="color:#000-2">errorThrown</span>);<br>	}<br>});<br></pre>
+	</div>
+	<div>
+	请求：
+<pre style="margin:20px 0;font:100 12px/18px monaco, andale mono, courier new;padding:10px 12px;border:#ddd 1px solid;border-left-width:4px;background-color:#fefefe;box-shadow:0 0 4px #eee;word-break:break-all;word-wrap:break-word;color:#444">Request URL:http://demo.52fhy.com/jsonp/handJsonp.php?_=1460894887711<span style="color:#219">&amp;callback=jsonp1</span><br>Request Method:GET<br>Status Code:200 OK</pre>
+	</div>
+	<div>
+	响应：
+	<pre style="margin:20px 0;font:100 12px/18px monaco, andale mono, courier new;padding:10px 12px;border:#ddd 1px solid;border-left-width:4px;background-color:#fefefe;box-shadow:0 0 4px #eee;word-break:break-all;word-wrap:break-word;color:#444">{name: "52fhy", age: "22"}</pre>
+	</div>
+</body>
+<script src="static/tj.js"></script>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>6使用baiduTemplate.js</title>
+	<!--weui.css仅为快速的做出页面，可删除-->
+	<link rel="stylesheet" href="static/weui.css"/>
+	<script src="static/zepto.min.js"></script>
+	
+	<!--BaiduTemplate.js-->
+	<script src="BaiduTemplate/baiduTemplate.js"></script>
+</head>
+
+<body>
+    
+	<div class="weui_panel weui_panel_access">
+        <div class="weui_panel_hd">文章列表</div>
+        <div class="weui_panel_bd js-blog-list">
+           
+        </div>
+    </div>
+	
+	<!--模板-->
+	<textarea class="js-tmp" id="js-tmp" style="display:none;">
+		<div class="weui_media_box weui_media_text">
+			<a href="<%= url %>" class="" target="_blank">
+				<h4 class="weui_media_title"><%= title %></h4>
+			</a>
+			<p class="weui_media_desc"><%= desc %></p>
+		</div>
+	</textarea>
+	<!--/模板-->
+	
+	<script type="text/javascript">
+		/*
+			百度JS模板引擎 baiduTemplate 1.0.6 版 http://tangram.baidu.com/BaiduTemplate/
+			https://github.com/wangxiao/BaiduTemplate
+			
+			//方法一：直接传入data，返回编译后的HTML片段
+			var html0 = baidu.template(tpl,data);  
+
+			//或直接传入id即可
+			var html0 = baidu.template('test1',data);  
+			
+			
+			支持if等语句<% if(admin) %>   <%}%>
+		*/
+
+		$(function(){
+			$.ajax({
+				url: 'static/blog.json',
+				type: 'get',
+		        dataType: 'json',
+		        success: function (response) {
+					var htmlList = '';
+					var data = response.list;
+
+					var htmlTemp = $("textarea.js-tmp").val();
+						
+					$.each(data, function(i,el) {
+						//htmlList += htmlTemp.temp(el);
+						//htmlList += laytpl(htmlTemp).render(el);
+						//htmlList += _.template(htmlTemp)(el);
+						
+						//htmlList += baidu.template(htmlTemp,el);
+						//或者:
+						htmlList += baidu.template("js-tmp",el);
+					});
+
+					$('.js-blog-list').empty().append(htmlList);
+		        },
+				error: function (jqXHR, textStatus, errorThrown) {
+					if (textStatus == 'timeout') {
+						alert('请求超时');
+						return false;
+					}
+					console.log(jqXHR.responseText);
+				},
+			});
+		});
+	</script>
+	<script src="static/tj.js"></script>
+</body>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>7使用doT.min.js</title>
+	<!--weui.css仅为快速的做出页面，可删除-->
+	<link rel="stylesheet" href="static/weui.css"/>
+	<script src="static/zepto.min.js"></script>
+	
+	<!--引入doT.min.js-->
+	<script src="dot/doT.min.js"></script>
+</head>
+
+<body>
+    
+	<div class="weui_panel weui_panel_access">
+        <div class="weui_panel_hd">文章列表</div>
+        <div class="weui_panel_bd js-blog-list">
+           
+        </div>
+    </div>
+	
+	<!--模板 ： 需要加对象前缀it-->
+	<textarea class="js-tmp" style="display:none;">
+		<div class="weui_media_box weui_media_text">
+			<a href="{{= it.url }}" class="" target="_blank">
+				<h4 class="weui_media_title">{{= it.title }}</h4>
+			</a>
+			<p class="weui_media_desc">{{= it.desc }}</p>
+		</div>
+	</textarea>
+	<!--/模板-->
+	
+	<script type="text/javascript">
+		/*
+			doT.js  https://github.com/olado/doT
+			olado/doT: The fastest + concise javascript template engine for nodejs and browsers. Partials, custom delimiters and more.
+			
+			用法类似underscore的_.template
+		*/
+
+		$(function(){
+			$.ajax({
+				url: 'static/blog.json',
+				type: 'get',
+		        dataType: 'json',
+		        success: function (response) {
+					var htmlList = '';
+					var data = response.list;
+
+					var htmlTemp = $("textarea.js-tmp").val();
+						
+					$.each(data, function(i,el) {
+						//htmlList += htmlTemp.temp(el);
+						//htmlList += laytpl(htmlTemp).render(el);
+						//htmlList += _.template(htmlTemp)(el);
+						//htmlList += baidu.template(htmlTemp,el);
+
+						htmlList += doT.template(htmlTemp)(el);
+					});
+
+					$('.js-blog-list').empty().append(htmlList);
+		        },
+				error: function (jqXHR, textStatus, errorThrown) {
+					if (textStatus == 'timeout') {
+						alert('请求超时');
+						return false;
+					}
+					console.log(jqXHR.responseText);
+				},
+			});
+		});
+	</script>
+	<script src="static/tj.js"></script>
+</body>

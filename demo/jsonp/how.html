@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>jsonp跨域</title>
+    <script type="text/javascript">
+        //跨域发送HTTP请求，从服务端获取数据，callback指定回调函数名称
+		var url = 'http://demo.52fhy.com/jsonp/handJsonp.php?callback=handler';
+		
+        function getHello() {
+            var script = document.createElement('script');
+            script.setAttribute('src', url);
+            document.querySelector("head").appendChild(script);
+        }
+        // 处理函数
+        function handler(data) {
+            console.log(data);
+            // our code here...
+			
+			document.getElementById("tip").innerHTML = "请打开控制台查看返回数据："+ "</br>" +
+			"请求的地址：" + url + "</br>" + 
+			"返回的数据：" + JSON.stringify(data);
+        }
+    </script>
+ 
+</head>
+<body>
+    <input type="button" value="发送跨域HTTP请求，获取Hello World" onclick="getHello()" />
+	
+	<div style="margin:20px 10px;">
+		<p class="page_desc">服务端代码：</p>
+		<pre style="margin:20px 0;font:100 12px/18px monaco, andale mono, courier new;padding:10px 12px;border:#ddd 1px solid;border-left-width:4px;background-color:#fefefe;box-shadow:0 0 4px #eee;word-break:break-all;word-wrap:break-word;color:#444"><span style="color:#555">&lt;?php</span><br><br><span style="color:#a50">//$data = 'hello';</span><br><span style="color:#000-2">$data</span> <span style="color:#000">=</span> <span style="color:#708">array</span>(<span style="color:#a11">'name'</span> <span style="color:#000">=&gt;</span> <span style="color:#a11">'52fhy'</span>, <span style="color:#a11">'age'</span> <span style="color:#000">=&gt;</span> <span style="color:#a11">'22'</span>);<br><br><span style="color:#@cm-word">handJsonp</span>(<span style="color:#000-2">$data</span>);<br><br><span style="color:#a50">//处理jsonp</span><br><span style="color:#708">function</span> <span style="color:#@cm-word">handJsonp</span>(<span style="color:#000-2">$data</span>){<br>	<span style="color:#000-2">$callback</span> <span style="color:#000">=</span> <span style="color:#000-2">$_GET</span>[<span style="color:#a11">'callback'</span>] <span style="color:#000">?</span> : <span style="color:#a11">'callback'</span>; <span style="color:#a50">//默认使用callback</span><br>	<span style="color:#708">echo</span> <span style="color:#@cm-word">sprintf</span>(<span style="color:#a11">"%s(%s)"</span>, <span style="color:#000-2">$callback</span>, <span style="color:#@cm-word">json_encode</span>(<span style="color:#000-2">$data</span>));<br>	<span style="color:#708">exit</span>;<br>}</pre>
+	</div>
+	<div id="tip"></div>
+</body>
+<script src="static/tj.js"></script>
+</html>
